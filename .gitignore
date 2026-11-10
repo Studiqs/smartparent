@@ -1,0 +1,173 @@
+# =============================================================================
+# STUDIQS® SmartParent™ - Master Root .gitignore
+# =============================================================================
+
+# =============================================================================
+# 0. PRIVATE BACKEND SOURCE & INTELLECTUAL PROPERTY (Local Only - Zero Cloud Push)
+# =============================================================================
+backend/src/
+backend/data/
+backend/tests/
+backend/alembic/
+backend/scripts/
+backend/studiqs_production_bundle/
+backend/deploy/
+backend/models/
+backend/.github/
+backend/rag/
+backend/docker-compose.yml
+
+# =============================================================================
+# 1. STRICT DOCUMENTATION & RESEARCH EXCLUSIONS (Do NOT push to GitHub)
+# =============================================================================
+_historical_archive/
+*/_historical_archive/
+docs/
+*/docs/
+documentations/
+documentations*/
+documentations for studiqs/
+TOC_Section_6_Quality_And_Confidence_Layer/
+TOC*/
+week*/
+week4/
+week 5/
+scratch/
+adapters/
+aggregation/
+mlruns/
+*/mlruns/
+outputs/
+*/outputs/
+
+# Office, PDF, Audio & Design Document Formats
+*.docx
+*.doc
+*.pdf
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+*.vsdx
+*.drawio
+*.fig
+*.zip
+*.tar.gz
+*.ogg
+*.mp3
+*.wav
+*.mp4
+Week*.txt
+Week*.docx.txt
+
+# =============================================================================
+# 2. LOCAL AGENT, R&D EXPERIMENT & LEGACY STQ PIPELINE ARTIFACTS
+# =============================================================================
+.agent/
+.agents/
+.gemini/
+.gsd/
+GSD-STYLE.md
+PROJECT_RULES.md
+VERSION
+/src/
+/tests/
+/scripts/
+/data/
+/cache/
+models/
+*/models/
+/config/
+generate_*.py
+run_batch_*.py
+mock_*.json
+topic_mastery_data.json
+model_capabilities.yaml
+requirements.txt
+
+# =============================================================================
+# 3. LOCAL SECRETS, CREDENTIALS & ENVIRONMENTS (Zero Leaks to GitHub)
+# =============================================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+
+# =============================================================================
+# 4. PYTHON & VIRTUAL ENVIRONMENTS
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+env/
+venv/
+ENV/
+
+# =============================================================================
+# 5. TESTING, COVERAGE & PROFILING CACHES
+# =============================================================================
+.pytest_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+.ruff_cache/
+
+# =============================================================================
+# 6. NODE.JS & FRONTEND CACHES
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+dist/
+dist-ssr/
+*.local
+
+# =============================================================================
+# 7. LOCAL DATABASES & STORAGE VOLUMES
+# =============================================================================
+*.sqlite3
+*.db
+*.sqlite
+storage/
+*/storage/
+uploads/
+*/uploads/
+
+# =============================================================================
+# 8. IDE & OPERATING SYSTEM ARTIFACTS
+# =============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini

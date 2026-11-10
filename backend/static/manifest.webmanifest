@@ -1,0 +1,56 @@
+{
+  "name": "STUDIQS® SmartParent™",
+  "short_name": "SmartParent",
+  "description": "B2C Family Academic Telemetry, Continuous Diagnostic Gap Intelligence & School Handoff",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f172a",
+  "theme_color": "#4338ca",
+  "categories": ["education", "parenting", "productivity"],
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Upload Marks / Paper",
+      "short_name": "Upload",
+      "description": "Upload recent test marks or answer sheet",
+      "url": "/upload",
+      "icons": [{ "src": "/static/icons/shortcut-upload.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Student 360 Diagnostic",
+      "short_name": "Diagnostic",
+      "description": "View active gaps and learning trajectory",
+      "url": "/diagnostic",
+      "icons": [{ "src": "/static/icons/shortcut-diagnostic.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Ask Studiqs Voice Assistant",
+      "short_name": "Voice Assistant",
+      "description": "Speak with the read-only academic telemetry assistant",
+      "url": "/voice",
+      "icons": [{ "src": "/static/icons/shortcut-voice.png", "sizes": "96x96" }]
+    }
+  ]
+}
+

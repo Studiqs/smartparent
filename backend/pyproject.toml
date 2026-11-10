@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smartparent-backend"
+version = "6.3.0"
+description = "STUDIQS® SmartParent™ - High-Concurrency B2C Family Intelligence & Academic Telemetry Backend"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "Studiqs AI Core Team", email = "engineering@studiqs.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Framework :: FastAPI",
+]
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-q --tb=short"
+testpaths = ["tests"]
+asyncio_mode = "strict"
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+filterwarnings = [
+    "ignore::DeprecationWarning:mlflow.*",
+    "ignore::DeprecationWarning:pydantic.*",
+    "ignore::requests.RequestsDependencyWarning",
+]
+
+[tool.coverage.run]
+source = ["src/smartparent"]
+omit = [
+    "tests/*",
+    "alembic/*",
+    "scripts/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

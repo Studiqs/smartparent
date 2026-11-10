@@ -1,0 +1,94 @@
+# ==============================================================================
+# STUDIQS® SmartParent™ v6.3 - Render.com PaaS Deployment Blueprint
+# Web Service + Celery Async Worker + Celery Beat + Redis
+# ==============================================================================
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. Primary ASGI Web Service (FastAPI)
+  # ----------------------------------------------------------------------------
+  - type: web
+    name: smartparent-api
+    runtime: python
+    region: oregon
+    plan: standard
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn src.smartparent.main:app --host 0.0.0.0 --port $PORT --workers 4"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: false
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SYNC_URL
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: smartparent-redis
+          property: connectionString
+
+  # ----------------------------------------------------------------------------
+  # 2. Celery Asynchronous Background Worker
+  # ----------------------------------------------------------------------------
+  - type: worker
+    name: smartparent-celery-worker
+    runtime: python
+    region: oregon
+    plan: standard
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A src.smartparent.core.celery_app worker -l info -Q evidence_queue,scheduled_queue -c 4"
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_URL
+        sync: false
+      - key: DATABASE_SYNC_URL
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: smartparent-redis
+          property: connectionString
+
+  # ----------------------------------------------------------------------------
+  # 3. Celery Beat Periodic Scheduler
+  # ----------------------------------------------------------------------------
+  - type: worker
+    name: smartparent-celery-beat
+    runtime: python
+    region: oregon
+    plan: starter
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "celery -A src.smartparent.core.celery_app beat -l info"
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: smartparent-redis
+          property: connectionString
+
+  # ----------------------------------------------------------------------------
+  # 4. Managed Redis Service
+  # ----------------------------------------------------------------------------
+  - type: redis
+    name: smartparent-redis
+    region: oregon
+    plan: starter
+    ipAllowList: []
+

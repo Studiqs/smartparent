@@ -1,0 +1,68 @@
+# ==============================================================================
+# STUDIQS® SmartParent™ - Docker Build Ignore Configuration
+# Prevents bloated image layers, cache contamination & sensitive file leaks
+# ==============================================================================
+
+# Version Control & Agent Configs
+.git
+.gitignore
+.github
+.agent
+.agents
+.gemini
+.gsd
+
+# Python Bytecode & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Testing & Coverage Artifacts
+.pytest_cache/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.tox/
+tests/
+
+# IDE & Operating System Files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Large Binary Documents & Training Runs (Non-runtime assets)
+docs/
+mlruns/
+outputs/
+*.docx
+*.xlsx
+*.zip
+*.tar.gz
+
+# Local Secrets & Runtime Overrides (Supplied via docker-compose / orchestrator)
+.env
+.env.local
+.env.*.local
+*.log
+
+# Temp Uploads & Local Caches
+uploads/temp/*
+!uploads/temp/.gitkeep
+

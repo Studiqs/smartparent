@@ -1,0 +1,57 @@
+# =============================================================================
+# STUDIQS® SmartParent™ Backend - .gitignore
+# =============================================================================
+
+# Private Core Intellectual Property (Local Development Only - Zero Cloud Push)
+src/
+data/
+tests/
+alembic/
+scripts/
+studiqs_production_bundle/
+deploy/
+
+# Strict Document Exclusions (Do NOT push to GitHub)
+docs/
+*.docx
+*.doc
+*.pdf
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+mlruns/
+outputs/
+models/
+*/models/
+storage/
+uploads/
+
+# Environments & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+
+# Python & Caches
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.hypothesis/
+.ruff_cache/
+.coverage
+htmlcov/
+*.sqlite3
+*.db
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,20 @@
+# =============================================================================
+# STUDIQS® SmartParent™ - CODEOWNERS Configuration
+# =============================================================================
+# Rules strictly enforced by GitHub Branch Protection & Rulesets:
+# Every Pull Request requires mandatory review & approval from Lead (@MaheshM-01)
+# before code can be merged into staging or main.
+# =============================================================================
+
+# Global Fallback: Project Lead (@MaheshM-01) gatekeeps the entire repository
+* @MaheshM-01
+
+# CI/CD Workflows, GitHub Actions & Infrastructure
+/.github/ @MaheshM-01
+docker-compose*.yml @MaheshM-01
+
+# Backend Services, Core Architecture & API
+/backend/ @MaheshM-01 @Dora1HasiniR
+
+# Frontend Mobile UI/UX & PWA Client
+/frontend/ @MaheshM-01 @Dora1HasiniR
