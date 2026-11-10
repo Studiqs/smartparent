@@ -5,6 +5,7 @@
 # =============================================================================
 # 0. PRIVATE BACKEND SOURCE & INTELLECTUAL PROPERTY (Local Only - Zero Cloud Push)
 # =============================================================================
+FULLSTACK_DEVELOPER_HANDOVER.md
 backend/src/
 backend/data/
 backend/tests/
