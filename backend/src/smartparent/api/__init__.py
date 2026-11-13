@@ -1,0 +1,4 @@
+"""
+STUDIQS® SmartParent™ API Module.
+"""
+

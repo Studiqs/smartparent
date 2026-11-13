@@ -22,6 +22,7 @@ classifiers = [
 minversion = "7.0"
 addopts = "-q --tb=short"
 testpaths = ["tests"]
+pythonpath = [".", "src"]
 asyncio_mode = "strict"
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
@@ -57,3 +58,24 @@ target-version = ["py311"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = [
+    "E501",  # Line too long
+    "E712",  # Avoid equality comparisons to True (Standard in SQLAlchemy binary expressions)
+    "E711",  # Avoid equality comparisons to None (Standard in SQLAlchemy)
+    "E402",  # Module level import not at top of file
+    "E401",  # Multiple imports on one line
+    "E701",  # Multiple statements on one line
+    "E722",  # Bare except
+    "E741",  # Ambiguous variable name
+    "F401",  # Unused imports (common in package __init__.py re-exports)
+    "F403",  # Star import used
+    "F405",  # Undefined name from star import
+    "F841",  # Local variable assigned but never used
+    "F541",  # f-string without placeholders
+    "W291",  # Trailing whitespace
+    "W292",  # No newline at end of file
+    "W293",  # Blank line contains whitespace
+]

@@ -1,47 +1,33 @@
 # =============================================================================
-# STUDIQS® SmartParent™ - Master Root .gitignore
+# STUDIQS® SmartParent™ - Master Production .gitignore
 # =============================================================================
 
 # =============================================================================
-# 0. PRIVATE BACKEND SOURCE & INTELLECTUAL PROPERTY (Local Only - Zero Cloud Push)
+# 1. STRICT INTELLECTUAL PROPERTY & DOCUMENTATION PROTECTION (NEVER PUSH TO GIT)
 # =============================================================================
-FULLSTACK_DEVELOPER_HANDOVER.md
-backend/src/
-backend/data/
-backend/tests/
-backend/alembic/
-backend/scripts/
-backend/studiqs_production_bundle/
-backend/deploy/
-backend/models/
-backend/.github/
-backend/rag/
-backend/docker-compose.yml
-
-# =============================================================================
-# 1. STRICT DOCUMENTATION & RESEARCH EXCLUSIONS (Do NOT push to GitHub)
-# =============================================================================
-_historical_archive/
-*/_historical_archive/
 docs/
 */docs/
+backend/docs/
 documentations/
 documentations*/
-documentations for studiqs/
-TOC_Section_6_Quality_And_Confidence_Layer/
+"documentations for studiqs/"
+_historical_archive/
+*/_historical_archive/
+scratch/
+scripts/
+backend/scripts/
 TOC*/
 week*/
-week4/
-week 5/
-scratch/
-adapters/
-aggregation/
-mlruns/
-*/mlruns/
-outputs/
-*/outputs/
+"week 5/"
+Week*.txt
+Week*.docx.txt
+FULLSTACK_DEVELOPER_HANDOVER.md
+FEATURE_PACK_1_HANDOVER.md
+studiqs_handover_bundle/
+studiqs_fp1_handover/
+*_handover*/
 
-# Office, PDF, Audio & Design Document Formats
+# All Office, PDF, Audio & Design Formats
 *.docx
 *.doc
 *.pdf
@@ -58,36 +44,9 @@ outputs/
 *.mp3
 *.wav
 *.mp4
-Week*.txt
-Week*.docx.txt
 
 # =============================================================================
-# 2. LOCAL AGENT, R&D EXPERIMENT & LEGACY STQ PIPELINE ARTIFACTS
-# =============================================================================
-.agent/
-.agents/
-.gemini/
-.gsd/
-GSD-STYLE.md
-PROJECT_RULES.md
-VERSION
-/src/
-/tests/
-/scripts/
-/data/
-/cache/
-models/
-*/models/
-/config/
-generate_*.py
-run_batch_*.py
-mock_*.json
-topic_mastery_data.json
-model_capabilities.yaml
-requirements.txt
-
-# =============================================================================
-# 3. LOCAL SECRETS, CREDENTIALS & ENVIRONMENTS (Zero Leaks to GitHub)
+# 2. LOCAL SECRETS, CREDENTIALS & SENSITIVE KEYS (ZERO LEAKS)
 # =============================================================================
 .env
 .env.*
@@ -100,7 +59,27 @@ requirements.txt
 *.p12
 
 # =============================================================================
-# 4. PYTHON & VIRTUAL ENVIRONMENTS
+# 3. HEAVY MODEL BINARIES, EMBEDDINGS & DATASETS (LOCAL COMPUTE ONLY)
+# =============================================================================
+backend/data/
+backend/models/
+backend/studiqs_production_bundle/
+backend/src/models/
+*.onnx
+*.npy
+tokenizer.json
+backend/tests/fixtures/samples/
+mlruns/
+*/mlruns/
+outputs/
+*/outputs/
+storage/
+*/storage/
+uploads/
+*/uploads/
+
+# =============================================================================
+# 4. PYTHON, VIRTUAL ENVIRONMENTS & PYTEST CACHES
 # =============================================================================
 __pycache__/
 *.py[cod]
@@ -126,19 +105,18 @@ wheels/
 env/
 venv/
 ENV/
-
-# =============================================================================
-# 5. TESTING, COVERAGE & PROFILING CACHES
-# =============================================================================
 .pytest_cache/
 .hypothesis/
 .coverage
 .coverage.*
 htmlcov/
 .ruff_cache/
+*.sqlite3
+*.db
+*.sqlite
 
 # =============================================================================
-# 6. NODE.JS & FRONTEND CACHES
+# 5. NODE.JS & FRONTEND ARTIFACTS
 # =============================================================================
 node_modules/
 npm-debug.log*
@@ -151,19 +129,15 @@ dist-ssr/
 *.local
 
 # =============================================================================
-# 7. LOCAL DATABASES & STORAGE VOLUMES
+# 6. LOCAL AI AGENT CONFIGS & METADATA
 # =============================================================================
-*.sqlite3
-*.db
-*.sqlite
-storage/
-*/storage/
-uploads/
-*/uploads/
-
-# =============================================================================
-# 8. IDE & OPERATING SYSTEM ARTIFACTS
-# =============================================================================
+.agent/
+.agents/
+.gemini/
+.gsd/
+GSD-STYLE.md
+PROJECT_RULES.md
+VERSION
 .vscode/
 .idea/
 *.swp

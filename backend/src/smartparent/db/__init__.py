@@ -1,0 +1,4 @@
+"""
+STUDIQS® SmartParent™ Database Layer.
+"""
+
