@@ -456,3 +456,23 @@ def get_child_cases(
         raise HTTPException(status_code=403, detail=str(pe))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get(
+    "/expert/cases",
+    response_model=List[EvaluationCaseDetailResponse],
+    summary="List all evaluation cases assigned to authenticated expert",
+    description="Returns assigned cases for the logged-in expert to review in the Split-Screen Evaluation Studio.",
+)
+def get_expert_assigned_cases(
+    status: Optional[str] = None,
+    db: Session = Depends(get_db),
+    expert_id: uuid.UUID = Depends(get_current_expert_id),
+):
+    service = MarketplaceService()
+    try:
+        return service.get_expert_cases(db=db, expert_id=expert_id, status=status)
+    except PermissionError as pe:
+        raise HTTPException(status_code=403, detail=str(pe))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

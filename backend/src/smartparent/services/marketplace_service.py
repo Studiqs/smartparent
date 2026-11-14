@@ -1053,3 +1053,16 @@ class MarketplaceService:
             .all()
         )
         return [self.get_case_detail(db, c.case_id, subscriber_id=subscriber_id) for c in cases]
+
+    def get_expert_cases(
+        self,
+        db: Session,
+        expert_id: uuid.UUID,
+        status: Optional[str] = None,
+    ) -> List[EvaluationCaseDetailResponse]:
+        """Lists all evaluation cases assigned to an authenticated expert."""
+        query = db.query(EvaluationCase).filter(EvaluationCase.expert_id == expert_id)
+        if status:
+            query = query.filter(EvaluationCase.case_status == status.upper())
+        cases = query.order_by(desc(EvaluationCase.created_at)).all()
+        return [self.get_case_detail(db, c.case_id, expert_id=expert_id) for c in cases]
