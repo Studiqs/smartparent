@@ -223,3 +223,42 @@ class EvaluationCaseDetailResponse(BaseModel):
     sla_breached: bool = False
     can_dispute: bool = False
     review: Optional[ExpertReviewResponse] = None
+
+
+# =============================================================================
+# 8. Expert Onboarding & Vetting Lifecycle (Section 11 & 12)
+# =============================================================================
+
+class ExpertApplicationRequest(BaseModel):
+    """Expert self-service application form for accreditation."""
+    model_config = ConfigDict(extra="ignore")
+
+    full_name: str = Field(..., min_length=2, max_length=150)
+    email: str = Field(..., min_length=5, max_length=255)
+    mobile_number: str = Field(..., min_length=10, max_length=20)
+    password: str = Field(..., min_length=6, max_length=128)
+    subjects: List[str] = Field(default_factory=lambda: ["Mathematics"])
+    classes: List[str] = Field(default_factory=lambda: ["Class 10", "Class 12"])
+    boards: List[str] = Field(default_factory=lambda: ["CBSE"])
+    qualifications: str = Field(..., min_length=2, max_length=255)
+    experience_years: int = Field(default=3, ge=0, le=50)
+    bio: Optional[str] = Field(None, max_length=1000)
+    per_case_fee: float = Field(default=150.0, ge=50.0, le=2000.0)
+
+
+class ExpertApplicationResponse(BaseModel):
+    """Response returned upon expert application submission."""
+    expert_id: str
+    email: str
+    full_name: str
+    kyc_status: str
+    is_active: bool
+    message: str
+
+
+class ExpertVerificationDecisionRequest(BaseModel):
+    """Super Admin decision payload for approving or rejecting an expert."""
+    model_config = ConfigDict(extra="ignore")
+
+    action: str = Field(..., pattern="^(APPROVE|REJECT)$")
+    rejection_reason: Optional[str] = None

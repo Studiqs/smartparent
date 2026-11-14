@@ -41,9 +41,17 @@ from src.smartparent.schemas.marketplace import (
     SendCaseMessageRequest,
     CaseMessageResponse,
     EvaluationCaseDetailResponse,
+    ExpertApplicationRequest,
+    ExpertApplicationResponse,
+    ExpertVerificationDecisionRequest,
 )
 from src.smartparent.services.marketplace_service import MarketplaceService
-from src.smartparent.api.deps import get_db, get_current_subscriber_id, get_current_expert_id
+from src.smartparent.api.deps import (
+    get_db,
+    get_current_subscriber_id,
+    get_current_expert_id,
+    get_current_admin_id,
+)
 
 router = APIRouter(prefix="/marketplace", tags=["Section 11: Subject Expert Marketplace"])
 
@@ -474,5 +482,62 @@ def get_expert_assigned_cases(
         return service.get_expert_cases(db=db, expert_id=expert_id, status=status)
     except PermissionError as pe:
         raise HTTPException(status_code=403, detail=str(pe))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# =============================================================================
+# 8. EXPERT ACCREDITATION & ADMIN ONBOARDING AUDIT
+# =============================================================================
+
+@router.post(
+    "/experts/apply",
+    response_model=ExpertApplicationResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Step 0: Expert submits self-service accreditation application",
+    description="Public application endpoint for prospective evaluators. Places account in PENDING KYC status until Super Admin approval.",
+)
+def apply_as_expert(
+    payload: ExpertApplicationRequest,
+    db: Session = Depends(get_db),
+):
+    service = MarketplaceService()
+    try:
+        return service.apply_as_expert(db=db, payload=payload)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get(
+    "/admin/pending-applications",
+    summary="Super Admin: List pending expert applications awaiting review",
+    description="Returns unverified expert candidates for Super Admin manual review and vetting.",
+)
+def list_pending_expert_applications(
+    db: Session = Depends(get_db),
+    admin_id: uuid.UUID = Depends(get_current_admin_id),
+):
+    service = MarketplaceService()
+    return service.list_pending_expert_applications(db=db)
+
+
+@router.put(
+    "/admin/experts/{expert_id}/verify",
+    summary="Super Admin: Approve or reject prospective expert candidate",
+    description="Sets kyc_status to VERIFIED/REJECTED and activates/deactivates the expert account.",
+)
+def verify_expert_application(
+    expert_id: uuid.UUID,
+    payload: ExpertVerificationDecisionRequest,
+    db: Session = Depends(get_db),
+    admin_id: uuid.UUID = Depends(get_current_admin_id),
+):
+    service = MarketplaceService()
+    try:
+        return service.verify_expert(db=db, expert_id=expert_id, payload=payload)
+    except KeyError as ke:
+        raise HTTPException(status_code=404, detail=str(ke))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

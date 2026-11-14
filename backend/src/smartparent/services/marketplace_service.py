@@ -68,7 +68,11 @@ from src.smartparent.schemas.marketplace import (
     SendCaseMessageRequest,
     CaseMessageResponse,
     EvaluationCaseDetailResponse,
+    ExpertApplicationRequest,
+    ExpertApplicationResponse,
+    ExpertVerificationDecisionRequest,
 )
+from src.smartparent.core.security import get_password_hash
 
 logger = logging.getLogger("STUDIQS_MarketplaceService")
 
@@ -1066,3 +1070,113 @@ class MarketplaceService:
             query = query.filter(EvaluationCase.case_status == status.upper())
         cases = query.order_by(desc(EvaluationCase.created_at)).all()
         return [self.get_case_detail(db, c.case_id, expert_id=expert_id) for c in cases]
+
+    def apply_as_expert(
+        self,
+        db: Session,
+        payload: ExpertApplicationRequest,
+    ) -> ExpertApplicationResponse:
+        """
+        Self-service application for subject experts.
+        Locks status to PENDING and inactive until Super Admin manually verifies credentials.
+        """
+        existing = db.query(Expert).filter(Expert.email == payload.email.lower()).first()
+        if existing:
+            raise ValueError(f"An expert account with email {payload.email} already exists.")
+
+        expert_id = uuid.uuid4()
+        new_expert = Expert(
+            expert_id=expert_id,
+            email=payload.email.lower(),
+            password_hash=get_password_hash(payload.password),
+            kyc_status="PENDING",
+            is_active=False,
+        )
+        db.add(new_expert)
+        db.flush()
+
+        # Generate safe display alias (e.g. Dr. R. Raman - Senior CBSE Mathematics Evaluator)
+        alias_prefix = payload.full_name.split()[0] if payload.full_name else "Educator"
+        display_alias = f"{alias_prefix} (Verified Evaluator)"
+
+        new_profile = ExpertProfile(
+            profile_id=uuid.uuid4(),
+            expert_id=expert_id,
+            display_alias=display_alias,
+            bio=payload.bio or f"Experienced educator specializing in {', '.join(payload.subjects)}.",
+            qualified_boards=payload.boards,
+            qualified_classes=payload.classes,
+            qualified_subjects=payload.subjects,
+            sla_turnaround_hours=48,
+            per_case_fee=payload.per_case_fee,
+            rating_avg=5.00,
+            total_reviews=0,
+            penalty_violations=0,
+        )
+        db.add(new_profile)
+        db.commit()
+        db.refresh(new_expert)
+
+        return ExpertApplicationResponse(
+            expert_id=str(new_expert.expert_id),
+            email=new_expert.email,
+            full_name=payload.full_name,
+            kyc_status="PENDING",
+            is_active=False,
+            message="Your expert application has been submitted successfully. Studiqs Super Admin will review your credentials and verify your account within 24-48 hours.",
+        )
+
+    def list_pending_expert_applications(self, db: Session) -> List[Dict[str, Any]]:
+        """Lists unverified expert applications for the Super Admin onboarding queue."""
+        experts = (
+            db.query(Expert)
+            .filter(Expert.kyc_status == "PENDING")
+            .order_by(desc(Expert.created_at))
+            .all()
+        )
+        results = []
+        for e in experts:
+            prof = e.profile
+            results.append({
+                "expert_id": str(e.expert_id),
+                "email": e.email,
+                "kyc_status": e.kyc_status,
+                "is_active": e.is_active,
+                "display_alias": prof.display_alias if prof else None,
+                "qualified_subjects": prof.qualified_subjects if prof else [],
+                "qualified_classes": prof.qualified_classes if prof else [],
+                "qualified_boards": prof.qualified_boards if prof else [],
+                "per_case_fee": float(prof.per_case_fee) if prof else 150.0,
+                "created_at": str(e.created_at) if hasattr(e, "created_at") else None,
+            })
+        return results
+
+    def verify_expert(
+        self,
+        db: Session,
+        expert_id: uuid.UUID,
+        payload: ExpertVerificationDecisionRequest,
+    ) -> Dict[str, Any]:
+        """Super Admin action to approve or reject an expert candidate."""
+        expert = db.query(Expert).filter(Expert.expert_id == expert_id).first()
+        if not expert:
+            raise KeyError(f"Expert {expert_id} not found.")
+
+        if payload.action == "APPROVE":
+            expert.kyc_status = "VERIFIED"
+            expert.is_active = True
+            msg = f"Expert {expert.email} successfully verified and activated."
+        else:
+            expert.kyc_status = "REJECTED"
+            expert.is_active = False
+            msg = f"Expert {expert.email} application rejected. Reason: {payload.rejection_reason or 'Credentials not verified.'}"
+
+        db.commit()
+        db.refresh(expert)
+        return {
+            "expert_id": str(expert.expert_id),
+            "email": expert.email,
+            "kyc_status": expert.kyc_status,
+            "is_active": expert.is_active,
+            "message": msg,
+        }
